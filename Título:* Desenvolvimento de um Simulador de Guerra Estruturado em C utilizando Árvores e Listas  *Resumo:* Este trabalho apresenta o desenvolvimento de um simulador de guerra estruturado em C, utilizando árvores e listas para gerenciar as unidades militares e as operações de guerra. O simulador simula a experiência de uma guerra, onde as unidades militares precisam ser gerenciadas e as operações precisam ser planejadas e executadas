@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// Estrutura para representar uma unidade militar
+typedef struct Unidade {
+    int id;
+    int tipo; // 1: Infantaria, 2: Cavalaria, 3: Artilharia
+    int vida;
+    int ataque;
+} Unidade;
+
+// Estrutura para representar uma operação militar
+typedef struct Operacao {
+    int id;
+    Unidade* unidades;
+    int objetivo; // 1: Ataque, 2: Defesa
+} Operacao;
+
+// Estrutura para representar a árvore de unidades
+typedef struct No {
+    Unidade* unidade;
+    struct No* esquerda;
+    struct No* direita;
+} No;
+
+// Função para criar uma unidade militar
+Unidade criarUnidade(int id, int tipo) {
+    Unidade unidade;
+    unidade.id = id;
+    unidade.tipo = tipo;
+    unidade.vida = 100;
+    unidade.ataque = 10;
+    return unidade;
+}
+
+// Função para criar uma operação militar
+Operacao criarOperacao(int id) {
+    Operacao operacao;
+    operacao.id = id;
+    operacao.unidades = (Unidade*) malloc(sizeof(Unidade) * 10);
+    operacao.objetivo = 1; // Ataque
+    return operacao;
+}
+
+// Função para inserir uma unidade na árvore
+void inserirUnidade(No** raiz, Unidade* unidade) {
+    if (*raiz == NULL) {
+        *raiz = (No*) malloc(sizeof(No));
+        (*raiz)->unidade = unidade;
+        (*raiz)->esquerda = NULL;
+        (*raiz)->direita = NULL;
+    } else if (unidade->id < (*raiz)->unidade->id) {
+        inserirUnidade(&((*raiz)->esquerda), unidade);
+    } else {
+        inserirUnidade(&((*raiz)->direita), unidade);
+    }
+}
+
+// Função para simular a guerra
+void simularGuerra(Operacao* operacao) {
+    // Simular o ataque
+    for (int i = 0; i < 10; i++) {
+        if (operacao->unidades[i].tipo == 1) {
+            // Infantaria ataca
+        } else if (operacao->unidades[i].tipo == 2) {
+            // Cavalaria ataca
+        } else {
+            // Artilharia ataca
+        }
+    }
+}
+
+int main() {
+    srand(time(NULL));
+    No* raiz = NULL;
+    Operacao operacao = criarOperacao(1);
+    for (int i = 0; i < 10; i++) {
+        Unidade unidade = criarUnidade(i, rand() % 3 + 1);
+        inserirUnidade(&raiz, &unidade);
+        operacao.unidades[i] = unidade;
+    }
+    simularGuerra(&operacao);
+    return 0;
+}
