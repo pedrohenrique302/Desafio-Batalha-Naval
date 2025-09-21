@@ -1,0 +1,124 @@
+Código:*
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Estrutura para representar um nó da árvore binária
+typedef struct No {
+    int id;
+    char descricao[100];
+    struct No* esquerda;
+    struct No* direita;
+} No;
+
+// Estrutura para representar um nó da BST
+typedef struct NoBST {
+    char pista[100];
+    char suspeito[100];
+    struct NoBST* esquerda;
+    struct NoBST* direita;
+} NoBST;
+
+// Estrutura para representar uma tabela hash
+typedef struct TabelaHash {
+    int tamanho;
+    NoBST** elementos;
+} TabelaHash;
+
+// Função para criar um nó da árvore binária
+No* criarNo(int id, char* descricao) {
+    No* no = (No*) malloc(sizeof(No));
+    no->id = id;
+    strcpy(no->descricao, descricao);
+    no->esquerda = NULL;
+    no->direita = NULL;
+    return no;
+}
+
+// Função para criar um nó da BST
+NoBST* criarNoBST(char* pista, char* suspeito) {
+    NoBST* no = (NoBST*) malloc(sizeof(NoBST));
+    strcpy(no->pista, pista);
+    strcpy(no->suspeito, suspeito);
+    no->esquerda = NULL;
+    no->direita = NULL;
+    return no;
+}
+
+// Função para criar uma tabela hash
+TabelaHash* criarTabelaHash(int tamanho) {
+    TabelaHash* tabela = (TabelaHash*) malloc(sizeof(TabelaHash));
+    tabela->tamanho = tamanho;
+    tabela->elementos = (NoBST**) calloc(tamanho, sizeof(NoBST*));
+    return tabela;
+}
+
+// Função para inserir um nó na árvore binária
+void inserirNo(No* raiz, No* no) {
+    if (raiz == NULL) {
+        raiz = no;
+    } else if (no->id < raiz->id) {
+        if (raiz->esquerda == NULL) {
+            raiz->esquerda = no;
+        } else {
+            inserirNo(raiz->esquerda, no);
+        }
+    } else {
+        if (raiz->direita == NULL) {
+            raiz->direita = no;
+        } else {
+            inserirNo(raiz->direita, no);
+        }
+    }
+}
+
+// Função para inserir um nó na BST
+void inserirNoBST(NoBST* raiz, NoBST* no) {
+    if (raiz == NULL) {
+        raiz = no;
+    } else if (strcmp(no->pista, raiz->pista) < 0) {
+        if (raiz->esquerda == NULL) {
+            raiz->esquerda = no;
+        } else {
+            inserirNoBST(raiz->esquerda, no);
+        }
+    } else {
+        if (raiz->direita == NULL) {
+            raiz->direita = no;
+        } else {
+            inserirNoBST(raiz->direita, no);
+        }
+    }
+}
+
+// Função para inserir um elemento na tabela hash
+void inserirTabelaHash(TabelaHash* tabela, NoBST* no) {
+    int indice = hash(no->pista, tabela->tamanho);
+    if (tabela->elementos[indice] == NULL) {
+        tabela->elementos[indice] = no;
+    } else {
+        NoBST* atual = tabela->elementos[indice];
+        while (atual->direita != NULL) {
+            atual = atual->direita;
+        }
+        atual->direita = no;
+    }
+}
+
+// Função para calcular o hash
+int hash(char* pista, int tamanho) {
+    int soma = 0;
+    for (int i = 0; i < strlen(pista); i++) {
+        soma += pista[i];
+    }
+    return soma % tamanho;
+}
+
+int main() {
+    // Criar a árvore binária
+    No* raiz = criarNo(1, "Sala de estar");
+    inserirNo(raiz, criarNo(2, "Quarto"));
+    inserirNo(raiz, criarNo(3, "Cozinha"));
+
+    // Criar a BST
+    NoBST* raizBST = criarNoBST("Pista 1", ", "
