@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+// Estrutura para representar um jogador
+typedef struct Jogador {
+    int id;
+    int vida;
+    int recursos;
+} Jogador;
+
+// Estrutura para representar o mapa
+typedef struct Mapa {
+    int largura;
+    int altura;
+    Jogador* jogadores;
+} Mapa;
+
+// Função para criar um jogador
+Jogador criarJogador(int id) {
+    Jogador jogador;
+    jogador.id = id;
+    jogador.vida = 100;
+    jogador.recursos = 0;
+    return jogador;
+}
+
+// Função para criar o mapa
+Mapa criarMapa(int largura, int altura) {
+    Mapa mapa;
+    mapa.largura = largura;
+    mapa.altura = altura;
+    mapa.jogadores = (Jogador*) malloc(sizeof(Jogador) * 100);
+    return mapa;
+}
+
+// Função para simular a batalha
+void simularBatalha(Mapa* mapa) {
+    // Simular a coleta de recursos
+    for (int i = 0; i < 100; i++) {
+        mapa->jogadores[i].recursos += rand() % 10;
+    }
+    // Simular a eliminação de jogadores
+    for (int i = 0; i < 100; i++) {
+        if (mapa->jogadores[i].vida <= 0) {
+            // Eliminar o jogador
+        }
+    }
+}
+
+int main() {
+    srand(time(NULL));
+    Mapa mapa = criarMapa(1000, 1000);
+    for (int i = 0; i < 100; i++) {
+        mapa.jogadores[i] = criarJogador(i);
+    }
+    simularBatalha(&mapa);
+    return 0;
+}
